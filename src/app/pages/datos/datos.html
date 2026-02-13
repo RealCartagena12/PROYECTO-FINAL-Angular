@@ -1,0 +1,41 @@
+<section class="datos-section">
+  <div class="datos-wrap">
+    <h2 class="datos-title">DATOS CURIOSOS</h2>
+
+    <!-- Loading -->
+    <p *ngIf="cargando" class="text-center">Cargando Datos...</p>
+
+    <!-- Error -->
+    <p *ngIf="!cargando && errorMsg" class="text-danger text-center">
+      {{ errorMsg }}
+    </p>
+
+    <!-- CONTENEDOR SIEMPRE EXISTE -->
+    <article
+      class="dato-card"
+      *ngFor="let d of datosPaginados"
+    >
+
+      <div class="dato-img">
+        <img [src]="'assets/img/' + d.imagen" [alt]="d.titulo" />
+      </div>
+
+      <div class="dato-content">
+        <h3>{{ d.titulo }}</h3>
+        <p>{{ d.descripcion }}</p>
+      </div>
+     </article>
+
+      <!-- PAGINACION -->
+        <div class="paginacion">
+          <button class="btn btn-secondary" (click)="prevPage()" [disabled]="currentPage === 1" >Anterior</button>
+        </div>
+
+        <span>Página {{ currentPage }} / {{ totalPages }}</span>
+
+        <div class="paginacion">
+        <button class="btn btn-secondary" (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+        </div>
+
+      </div>
+</section>

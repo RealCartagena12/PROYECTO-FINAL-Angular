@@ -1,0 +1,66 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary" id="EncabezadoSuperior">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" routerLink="/index"
+            ><img src="assets/img/LogoMnflv2.png" alt="Logo NFL" width="40" height="40" class="d-inline-block align-text-top me-2" />
+            <span class="fw-bold">  MOMENTOS NFL </span>
+    </a>
+
+     <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#menu"
+      aria-controls="menu"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+<!--Links de navegación-->
+<div class="collapse navbar-collapse" id="menu">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/index" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            INICIO
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/historias" routerLinkActive="active">
+            HISTORIAS
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/datos" routerLinkActive="active">
+            DATOS CURIOSOS
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/formulario" routerLinkActive="active">
+            DANOS TU APORTE A LA COMUNIDAD
+          </a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/juego" routerLinkActive="active">
+            MINIJUEGOS
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    </div>
+
+
+    <div class="reconnecting" *ngIf="(conn.reconnecting$ | async)">
+      🔄 Reconectando...
+    </div>
+
+<div class="navbar-right" *ngIf="auth.isLoggedIn() && user as u">
+  <span class="user-info">👋 Hola, {{ u.nombre }} ({{ u.equipo }})</span>
+  <button class="logout-btn" (click)="logout()" >Cerrar sesión</button>
+</div>
+</nav>

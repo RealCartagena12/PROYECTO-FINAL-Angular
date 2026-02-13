@@ -1,0 +1,43 @@
+<!-- DISCLAIMER (debajo del navbar) -->
+<section class="disclaimer">
+  <div class="disclaimer__inner">
+    <b>Advertencia de contenido:</b>
+    <br>
+    <strong>NO TODAS LAS HISTORIAS CUENTAN RELATOS FELICES.</strong>
+    Estas historias pueden incluir temas sensibles (lesiones graves, accidentes, violencia o tragedias).
+    Si prefieres evitar este tipo de contenido, vuelve a
+    <a routerLink="/historias">Historias</a>.
+  </div>
+</section>
+
+<section class="page">
+  <h1 class="title">HISTORIAS SENSIBLES</h1>
+
+  <div class="search">
+    <input
+      type="text"
+      placeholder="Buscar historia sensible..."
+      [ngModel]="q()"
+      (ngModelChange)="q.set($event)"
+    />
+  </div>
+
+  <p class="state" *ngIf="cargando()">Cargando...</p>
+  <p class="state error" *ngIf="!cargando() && errorMsg()">{{ errorMsg() }}</p>
+
+  <div class="grid" *ngIf="!cargando() && !errorMsg()">
+   
+    <article class="card" *ngFor="let h of filtradas()">
+  <div class="card_media">
+    <span class="badge">⚠ SENSIBLE</span>
+    <img class="card_img" [src]="h.imagen" [alt]="h.titulo" />
+  </div>
+  <div class="card_body">
+    <h3 class="card_title">{{ h.titulo }}</h3>
+    <p class="card_desc">{{ h.descripcion }}</p>
+    <p class="card_foot">Imagen vía {{ h.fuente }}</p>
+  </div>
+</article>
+
+  </div>
+</section>
