@@ -1,0 +1,140 @@
+<section class="admin-panel" *ngIf="isAdmin()">
+  <div class="admin-card">
+    <h2 class="admin-title">Panel de Administración</h2>
+    <p class="admin-subtitle">Crear historias (solo admins)</p>
+
+    <form class="admin-form" (ngSubmit)="crearHistoria()" #f="ngForm">
+      <div class="form-grid">
+        <div class="field">
+          <label>Título</label>
+          <input
+            type="text"
+            name="titulo"
+            [(ngModel)]="historia.titulo"
+            placeholder="Ej: El primer colombiano en la NFL"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label>Fuente</label>
+          <input
+            type="text"
+            name="fuente"
+            [(ngModel)]="historia.fuente"
+            placeholder="Ej: nfl.com"
+            required
+          />
+        </div>
+
+        <div class="field full">
+          <label>Descripción</label>
+          <textarea
+            name="descripcion"
+            [(ngModel)]="historia.descripcion"
+            placeholder="Escribe la historia..."
+            required
+            rows="4"
+          ></textarea>
+        </div>
+
+        <div class="field full">
+          <label>Imagen (nombre o URL)</label>
+          <input
+            type="text"
+            name="imagen"
+            [(ngModel)]="historia.imagen"
+            placeholder="Ej: foto.jpg o https://..."
+            required
+          />
+          <small class="hint">Si usas assets: assets/img/foto.jpg</small>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" type="button" (click)="historia = {titulo:'',descripcion:'',imagen:'',fuente:''}">
+          Limpiar
+        </button>
+
+        <button class="btn btn-primary" type="submit" [disabled]="f.invalid || cargando()">
+          {{ cargando() ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+
+      <p class="msg ok" *ngIf="msg && !errorMsg()">{{ msg }}</p>
+      <p class="msg err" *ngIf="errorMsg()">{{ errorMsg() }}</p>
+    </form>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+<section class="historias-section">
+<p *ngIf="msg">{{ msg }}</p>
+
+    <div class="container historias-wrap">
+
+        <h1 class="historias-tittle">HISTORIAS</h1>
+
+        <div class="sensitive-cta">
+  <a class="btnSensitive" routerLink="/historias-sensibles">
+    Ver historias sensibles
+  </a>
+</div>
+
+
+        <div class="search-wrap">
+            <input
+            class="form-control historias-search"
+            type="text"
+            placeholder="Buscar historia (ej. Super Bowl, Dolphins, Patriots...)"
+            [ngModel]="query()"
+            (ngModelChange)="query.set($event)"
+            />
+        </div>
+
+        
+
+            <p *ngIf="cargando()" class="text-center my-4">Cargando Historias</p>
+
+            <p *ngIf="!cargando() && errorMsg()" class="text-center text-danger my-4">
+                {{ errorMsg() }}
+            </p>
+
+            <p *ngIf="!cargando() && !errorMsg() && historiasFiltradas().length === 0" class="text-center my-4">
+                 No hay historias para mostrar.
+            </p>
+
+            <div class="row g-4" *ngIf="!cargando() && !errorMsg() && historiasFiltradas().length > 0">
+                <div class="col-12 col-md-6 col-lg-4" *ngFor="let h of historiasFiltradas()">
+                    <article class="historia-card">
+                        <div class="historia-img-wrap">
+                            <img class="historia-img" [src]="h.imagen?.startsWith('http') ? h.imagen : ('assets/img/' + h.imagen)" [alt]="h.titulo">
+                        </div>
+
+                         <div class="historia-body">
+                            <h3 class="historia-titulo">{{ h.titulo }}</h3>
+                                <p class="historia-desc">{{ h.descripcion }}</p>
+                                <p class="historia-fuente">{{ h.fuente }}</p>
+
+                                 <!-- 🔴 SOLO ADMIN -->
+                                <button
+                                  *ngIf="isAdmin()"
+                                  class="btn-delete"
+                                  (click)="eliminarHistoria(h._id || h.id!)">
+                                  🗑 Eliminar
+                                </button>
+
+                        </div>
+                    </article>
+                </div>
+            </div>
+    </div>
+</section>
