@@ -2,7 +2,7 @@ import { Token } from "@angular/compiler";
 
 export const environment = {
     production: true,
-    apiBaseUrl: 'http://localhost:3000/api',
+    apiBaseUrl: 'http://localhost:8080/api',
     tokenKey: 'token',
     userKey: 'user',
 

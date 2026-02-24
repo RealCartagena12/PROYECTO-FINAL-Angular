@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 export interface HistoriaSensibleApi {
   _id?: string;
@@ -13,7 +14,7 @@ export interface HistoriaSensibleApi {
 
 @Injectable({ providedIn: 'root' })
 export class HistoriasSensiblesService {
-  private baseUrl = 'http://localhost:3000/api/historias-sensibles';
+   private baseUrl = `${environment.apiBaseUrl}/historias-sensibles`;
 
   constructor(private http: HttpClient) {}
 
