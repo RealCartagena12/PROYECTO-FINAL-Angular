@@ -20,15 +20,31 @@ const jugadorRoutes = require("./routes/jugador.routes");
 const app = express();
 
 //CORS
+// CORS
+const allowedOrigins = [
+  "http://127.0.0.1:5500",
+  "http://localhost:4200",
+  "http://proyecto-final-front-jose-2026.s3-website-us-east-2.amazonaws.com",
+];
+
 app.use(cors({
-    origin: [
-        "http://127.0.0.1:5500",   // tu frontend anterior
-        "http://localhost:4200"   // Angular
-    ],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"]
+  origin: (origin, callback) => {
+    // Permitir requests sin Origin (Postman/curl)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("CORS blocked: " + origin));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
 }));
+
+// Preflight (muy importante)
+app.options("*", cors());
 
 
 // Parseo JSON
