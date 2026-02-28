@@ -29,22 +29,14 @@ const allowedOrigins = [
 
 app.use(cors({
   origin: (origin, callback) => {
-    // Permitir requests sin Origin (Postman/curl)
     if (!origin) return callback(null, true);
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
+    if (allowedOrigins.includes(origin)) return callback(null, true);
     return callback(new Error("CORS blocked: " + origin));
   },
   credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+  allowedHeaders: ["Content-Type","Authorization"]
 }));
-
-// Preflight (muy importante)
-app.options("*", cors());
 
 
 // Parseo JSON
