@@ -21,8 +21,6 @@ const app = express();
 
 //CORS
 // CORS
-const cors = require("cors");
-
 const allowedOrigins = [
   "http://127.0.0.1:5500",
   "http://localhost:4200",
