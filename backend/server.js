@@ -24,6 +24,9 @@ const app = express();
 const allowedOrigins = [
   "http://127.0.0.1:5500",
   "http://localhost:4200",
+// URL de tu frontend desplegado en S3
+  "http://proyecto-final-front-jose-2026.s3-website.us-east-2.amazonaws.com",
+
   "http://proyecto-final-front-jose-2026.s3-website-us-east-2.amazonaws.com",
   // por si luego usas CloudFront (https)
   "https://proyecto-final-front-jose-2026.s3-website-us-east-2.amazonaws.com",
