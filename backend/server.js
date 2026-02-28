@@ -21,22 +21,38 @@ const app = express();
 
 //CORS
 // CORS
+const cors = require("cors");
+
 const allowedOrigins = [
   "http://127.0.0.1:5500",
   "http://localhost:4200",
   "http://proyecto-final-front-jose-2026.s3-website-us-east-2.amazonaws.com",
+  // por si luego usas CloudFront (https)
+  "https://proyecto-final-front-jose-2026.s3-website-us-east-2.amazonaws.com",
 ];
 
-app.use(cors({
+const corsOptions = {
   origin: (origin, callback) => {
+    // Permitir requests sin Origin (Postman/curl)
     if (!origin) return callback(null, true);
+
     if (allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error("CORS blocked: " + origin));
+
+    // En vez de lanzar error (a veces confunde), mejor "false"
+    return callback(null, false);
   },
   credentials: true,
-  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
-  allowedHeaders: ["Content-Type","Authorization"]
-}));
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
+
+// IMPORTANTÍSIMO: preflight (OPTIONS)
+// En Express nuevo, '*' a veces da problemas; usa regex:
+app.options(/.*/, cors(corsOptions));
+
+
 
 
 // Parseo JSON
