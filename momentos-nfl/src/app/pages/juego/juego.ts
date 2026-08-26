@@ -5,6 +5,7 @@ import { JugadoresService } from '../../services/jugadores';
 import { JugadorApi } from '../../interfaces/jugador';
 import { AuthService } from '../../services/auth-service';
 import { Reconectando } from '../../services/reconectando';
+import { RouterLink } from '@angular/router';
 
 type JugadorJuego = {nombre: string, pistas: string[]};
 
@@ -12,7 +13,7 @@ type JugadorJuego = {nombre: string, pistas: string[]};
 @Component({
   selector: 'app-juego',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './juego.html',
   styleUrls: ['./juego.css'],
 })

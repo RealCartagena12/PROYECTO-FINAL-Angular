@@ -1,0 +1,82 @@
+<section class="trivia-container">
+  <div class="trivia-header">
+    <span class="icono">🏈</span>
+    <h1>Trivia NFL</h1>
+    <p>Responde antes de que termine el tiempo.</p>
+  </div>
+
+  <div class="trivia-card" *ngIf="!juegoIniciado">
+    <h2>¿Listo para jugar?</h2>
+    <p>Pon a prueba tus conocimientos sobre la NFL.</p>
+
+    <button class="btn-principal" (click)="iniciarJuego()" [disabled]="cargando">
+      {{ cargando ? 'Iniciando...' : 'Iniciar trivia' }}
+    </button>
+  </div>
+
+  <div class="trivia-card" *ngIf="juegoIniciado && !juegoFinalizado">
+    <div class="top-info">
+      <div>
+        <span class="label">Puntaje</span>
+        <strong>{{ puntaje }}</strong>
+      </div>
+
+      <div>
+        <span class="label">Tiempo</span>
+        <strong [class.tiempo-bajo]="tiempoRestante <= 5">
+          {{ tiempoRestante }}s
+        </strong>
+      </div>
+    </div>
+
+    <div *ngIf="cargando" class="cargando">
+      Cargando pregunta...
+    </div>
+
+    <div *ngIf="preguntaActual && !cargando">
+      <div class="badges">
+        <span>{{ preguntaActual.categoria }}</span>
+        <span>{{ preguntaActual.dificultad }}</span>
+      </div>
+
+      <h2 class="pregunta">
+        {{ preguntaActual.pregunta }}
+      </h2>
+
+      <div class="opciones">
+        <button
+          *ngFor="let opcion of preguntaActual.opciones"
+          (click)="responder(opcion)"
+          [disabled]="!!mensaje"
+          [class.seleccionada]="opcionSeleccionada === opcion"
+          [class.correcta]="mensaje && opcion === respuestaCorrecta"
+          [class.incorrecta]="
+            mensaje &&
+            opcionSeleccionada === opcion &&
+            opcionSeleccionada !== respuestaCorrecta
+          "
+        >
+          {{ opcion }}
+        </button>
+      </div>
+
+      <div class="resultado" *ngIf="mensaje">
+        <p>{{ mensaje }}</p>
+        <small>Respuesta correcta: {{ respuestaCorrecta }}</small>
+
+        <button class="btn-principal" (click)="siguiente()">
+          Siguiente pregunta
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="trivia-card final" *ngIf="juegoFinalizado">
+    <h2>🏆 Trivia finalizada</h2>
+    <p>{{ mensaje }}</p>
+
+    <button class="btn-principal" (click)="reiniciar()">
+      Jugar otra vez
+    </button>
+  </div>
+</section>

@@ -1,0 +1,302 @@
+<section>
+  <!--buscador de productos-->
+
+  <h1>Tienda de Momentos NFL</h1>
+    <p class="subtitulo"></p>
+
+    <div class="buscador">
+        <input
+        type="text"
+        [(ngModel)]="busqueda"
+        placeholder="Buscar productos, equipos, camisetas..."
+        (keyup.enter)="buscar()"
+        />
+
+        <button (click)="buscar()">Buscar</button>
+    </div>
+
+    <p class="mensaje" *ngIf="mensaje">{{ mensaje }}</p>
+
+
+    <!-- listado de productos -->
+    <div class="layout">
+        <div class="productos">
+            <p *ngIf="cargando">Cargando Productos...</p>
+
+            <div class="producto-card" *ngFor="let producto of productos">
+                <img  [src]="producto.imagen"/>
+
+                <h3>{{ producto.nombre }}</h3>
+                <p>{{ producto.descripcion }}</p>
+
+                <span class="categoria">{{ producto.categoria }}</span>
+
+                <div class="precio">
+                    <strong>${{ PrecioFinal(producto) | number }}</strong>
+                    <small *ngIf="producto.descuento > 0" >
+                        {{ producto.descuento }}% OFF
+                    </small>
+                </div>
+
+                <p class="stock">Stock: {{ producto.stock }}</p>
+
+                <button 
+                (click)="abrirSelectorProducto(producto)"
+                [disabled]="producto.stock <= 0"
+                class="comprar"
+                >
+                    Agregar al Carrito
+                </button>
+            </div>
+        </div>
+
+          <!-- pagos -->
+        <div class="checkout-modal" *ngIf="mostrarCheckout">
+            <div class="checkout-box">
+                <h2>Finalizar Compra</h2>
+
+                <div class="pasos">
+                    <span [class.activo]="pasoCheckout === 1">1. Resumen</span>
+                    <span [class.activo]="pasoCheckout === 2">2. Envío</span>
+                    <span [class.activo]="pasoCheckout === 3">3. Pago</span>
+                </div>
+
+                <div class="checkout-layout">
+                    <div class="checkout-main">
+
+                <div *ngIf="pasoCheckout === 1">
+                    <h3>Resumen del pedido</h3>
+
+                    <div *ngFor="let item of carrito" class="resumen-item">
+                        <strong>{{ item.producto.nombre }}</strong>
+                        <p>Cantidad: {{ item.cantidad }}</p>
+                        <p>Tall: {{ item.talla }} | Color: {{ item.color }} </p>
+                    </div>
+
+                    <h3>Total a pagar: ${{ totalCarrito() | number }}</h3>
+
+                    <button (click)="siguientePaso()">Continuar</button>
+                </div>
+
+                <div *ngIf="pasoCheckout === 2">
+                    <h3>Datos de Envío</h3>
+
+                    <input [(ngModel)]="direccionEnvio.nombre" placeholder="Nombre completo"/>
+                    <input [(ngModel)]="direccionEnvio.ciudad" placeholder="Ciudad"/>
+                    <input [(ngModel)]="direccionEnvio.direccion" placeholder="Dirección"/>
+                    <input [(ngModel)]="direccionEnvio.telefono" placeholder="Teléfono"/>
+
+                    <div class="acciones-checkout">
+                        <button (click)="pasoAnterior()">Atrás</button>
+                        <button (click)="siguientePaso()" [disabled]="!validarEnvio()">Continuar</button>
+                    </div>
+                </div>
+
+                <div *ngIf="pasoCheckout === 3">
+                    <h3>Método de pago</h3>
+
+                    <select [(ngModel)]="metodoPago">
+                        <option value="tarjeta">Tarjeta</option>
+                        <option value="pse">PSE</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="nequi">Nequi</option>
+                    </select>
+
+                    <div *ngIf="metodoPago === 'tarjeta'">
+                        <input [(ngModel)]="datosPago.numeroTarjeta" 
+                        placeholder="Número de tarjeta (1234 5678 9012 3456)"
+                        maxlength="19"
+                        />
+
+                        <input [(ngModel)]="datosPago.nombreTarjeta" 
+                        placeholder="Nombre en la tarjeta"
+                        />
+
+                        <input [(ngModel)]="datosPago.fechaExpiracion" 
+                        placeholder="Fecha de expiración (MM/AA)"
+                        maxlength="5"
+                        />
+                        
+                        <input [(ngModel)]="datosPago.cvv" 
+                        placeholder="CVV"
+                        maxlength="3"
+                        />
+
+                    </div>
+
+                    <div *ngIf="metodoPago === 'pse'">
+                        <input [(ngModel)]="datosPago.banco" placeholder="Banco"/>
+                    </div>
+
+                    <div *ngIf="metodoPago === 'nequi'">
+                        <input [(ngModel)]="datosPago.celular" placeholder="Número de Nequi"/>
+                    </div>
+
+                    <div class="aviso">
+                        <p>Nota: Este es un proyecto de demostración. No se procesarán pagos reales.</p>
+                    </div>
+
+                    <div class="acciones-checkout">
+                        <button (click)="pasoAnterior()">Atrás</button>
+                        <button (click)="CrearOrden()" [disabled]="!validarPago()">Confirmar Pago</button>
+                    </div>
+                </div>
+            </div>
+
+            <aside class="checkout-summary">
+                 <h3>Resumen del Pedido</h3>
+
+        <div class="fila-resumen">
+          <span>Productos</span>
+          <strong>{{ carrito.length }}</strong>
+        </div>
+
+        <div class="fila-resumen">
+          <span>Subtotal</span>
+          <strong>${{ totalCarrito() | number }}</strong>
+        </div>
+
+        <div class="fila-resumen">
+          <span>Envío</span>
+          <strong>Gratis</strong>
+        </div>
+
+        <hr />
+
+        <div class="fila-resumen total">
+          <span>Total</span>
+          <strong>${{ totalCarrito() | number }}</strong>
+        </div>
+
+        <div class="aviso-resumen">
+          Compra simulada para fines académicos.
+        </div>
+            </aside>
+
+                </div>
+
+                <button class="cerrar" (click)="mostrarCheckout = false">Cerrar</button>
+            </div>
+        </div>
+
+
+    </div>
+
+
+   <!-- selector de producto -->
+   <div class="producto-modal" *ngIf="mostrarSelectorProducto && productoSeleccionado">
+  <div class="producto-modal-box">
+    <button class="cerrar-selector" (click)="cerrarSelectorProducto()">×</button>
+
+    <div class="selector-top">
+      <img [src]="productoSeleccionado.imagen" />
+
+      <div>
+        <h3>{{ productoSeleccionado.nombre }}</h3>
+        <p>{{ productoSeleccionado.descripcion }}</p>
+        <a>Ver todos los detalles del producto</a>
+      </div>
+    </div>
+
+    <hr />
+
+    <label>Talla:</label>
+    <select [(ngModel)]="tallaSeleccionada">
+      <option *ngFor="let talla of productoSeleccionado.tallas" [value]="talla">
+        {{ talla }}
+      </option>
+    </select>
+
+    <label>Color:</label>
+    <select [(ngModel)]="colorSeleccionado">
+      <option *ngFor="let color of productoSeleccionado.colores" [value]="color">
+        {{ color }}
+      </option>
+    </select>
+
+
+    <label>Cantidad:</label>
+    <input type="number" min="1" [(ngModel)]="cantidadSeleccionada" />
+
+    <h2>${{ PrecioFinal(productoSeleccionado) | number }}</h2>
+
+    <p class="envio-modal">Entrega GRATIS · Compra simulada</p>
+
+    <div class="acciones-modal">
+      <button class="cancelar" (click)="cerrarSelectorProducto()">Cancelar</button>
+      
+      <button class="agregar-amazon" 
+      (click)="confirmarAgregarCarrito()">
+        Agregar al carrito
+      </button>
+    </div>
+  </div>
+</div>
+
+ <!-- carrito de compras -->
+ <div class="carrito-overlay" *ngIf="mostrarCarrito">
+  <div class="carrito-modal" *ngIf="mostrarCarrito">
+    <div class="carrito-box">
+      <div class="carrito-header">
+        <h2>Carrito</h2>
+        <button class="cerrar-carrito" (click)="cerrarCarrito()">X</button>
+    </div>
+
+    <div *ngIf="carrito.length === 0">
+        <p>El carrito está vacío.
+        </p>
+  </div>
+
+  <div class="item-carrito"
+  *ngFor="let item of carrito, let i = index"
+  >
+  <img [src]="item.producto.imagen" />
+  <div class="info-item">
+      <h4>{{ item.producto.nombre }}</h4>
+
+      <p>Talla:
+        <strong>{{ item.talla }}</strong>
+      </p>
+
+      <p>Color:
+        <strong>{{ item.color }}</strong>
+      </p>
+      
+      <p>Cantidad:
+        <strong>{{ item.cantidad }}</strong>
+      </p>
+      
+      <h3>${{ PrecioFinal(item.producto) * item.cantidad | number }}</h3>
+
+      <button class="btn-eliminar"
+      (click)="eliminarDelCarrito(i)"
+      > Eliminar del carrito
+
+      </button>
+  </div> 
+  </div>
+
+  <hr>
+
+  <div class="carrito-footer">
+    <h3>Total: ${{totalCarrito() | number}}</h3>
+
+  <button 
+  class="btn-checkout"
+  (click)="irAlCheckout()"
+  >
+  Proceder al pago
+  </button>
+    </div>
+  </div>
+  </div>
+</div>  
+
+
+  <button class="carrito-flotante" 
+  (click)="abrirCarrito()">
+    🛒
+      <span *ngIf="carrito.length > 0">{{ carrito.length }}</span>
+  </button>
+
+</section>

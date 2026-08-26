@@ -1,6 +1,6 @@
 export const environment = {
-    production: false,
-    apiBaseUrl : 'http://localhost:3000/api',
+    production: true,
+    apiBaseUrl : 'http://52.5.197.19:3000/api',
      tokenKey: 'token',
      userKey: 'user',
 

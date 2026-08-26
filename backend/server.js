@@ -8,13 +8,15 @@ console.log('ENV CHECK =>', {
   EMAIL_PASS: process.env.EMAIL_PASS ? 'OK' : 'NO PASS'
 });
 
-
 const express = require("express");
 const cors = require("cors"); 
 const connectDB = require("./config/db");
 
 const userRoutes = require("./routes/backend.routes");
 const jugadorRoutes = require("./routes/jugador.routes");
+const triviaRoutes = require("./routes/trivia.routes");
+const productoRoutes = require("./routes/producto.routes");
+const ordenRoutes = require("./routes/orden.routes");
 
 // Crear app
 const app = express();
@@ -60,7 +62,9 @@ app.options(/.*/, cors(corsOptions));
 app.use(express.json());
 
 // Conectar a MongoDB
+if (process.env.NODE_ENV !== "test") {
 connectDB();
+}
 
 // Comprobar estado del server
 app.get("/api/health", (req, res) => {
@@ -82,11 +86,21 @@ app.use("/api/historias", require("./routes/historias.routes"));
 app.use("/api/historias-sensibles", require("./routes/historiasSensibles.routes"));
 //api carrusel
 app.use("/api", require("./routes/index.routes"));
+//api trivia
+app.use("/api/trivia", triviaRoutes);
+//api productos
+app.use("/api/productos", productoRoutes);
+//api ordenes
+app.use("/api/ordenes", ordenRoutes);
 
 
 // Iniciar servidor
+if (process.env.NODE_ENV !== "test") {
 const PORT = Number(process.env.PORT) || 3000;
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server is running on port ${PORT}`);
 });
+}
+
+module.exports = app;
 
