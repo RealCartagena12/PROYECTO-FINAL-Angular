@@ -10,11 +10,6 @@
     font-size: 38px;
     font-weight: 900;
     margin-bottom: 6px;
-    background: linear-gradient(90deg, #1e3a8a, #dc2626);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
 }
 
  .tituloPrincipal {
@@ -22,6 +17,11 @@
     font-size: 38px;
     font-weight: 900;
     margin-bottom: 6px;
+    background: linear-gradient(90deg, #1e3a8a, #dc2626);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
 }
 
 .subtitulo {
