@@ -66,15 +66,17 @@
 .productos {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-  gap: 18px;
+  gap: 28px;
+  padding: 8px;
 }
 
 .producto-card {
   width: 260px;
   background: white;
   border-radius: 14px;
-  padding: 16px;
+  padding: 18px;
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+  margin-bottom: 4px;
 }
 
 .producto-card img {
